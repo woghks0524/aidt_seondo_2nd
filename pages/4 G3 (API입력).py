@@ -1,30 +1,55 @@
-import streamlit as st
-import google.generativeai as genai
-import toml
 import pathlib
+import textwrap
+import google.generativeai as genai
+import streamlit as st
+import random
 
-# secrets.toml 파일 경로
-secrets_path = pathlib.Path(__file__).parent.parent / ".streamlit/secrets.toml"
+# few-shot 프롬프트 구성 함수
+def try_generate_content(api_key, prompt_parts):
+    # API 키를 설정
+    genai.configure(api_key=api_key)
+    
+    # 설정된 모델 변경
+    model = genai.GenerativeModel(model_name="gemini-1.0-pro",
+                                  generation_config={
+                                      "temperature": 0.9,
+                                      "top_p": 1,
+                                      "top_k": 1,
+                                      "max_output_tokens": 2048,
+                                  },
+                                  safety_settings=[
+                                      {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+                                      {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+                                      {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+                                      {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+                                  ])
+    try:
+        # 콘텐츠 생성 시도
+        response = model.generate_content(prompt_parts)
+        return response.text
+    except Exception as e:
+        # 예외 발생시 None 반환
+        print(f"API 호출 실패: {e}")
+        return None
 
-# secrets.toml 파일 읽기
-with open(secrets_path, "r") as f:
-    secrets = toml.load(f)
-
-# 여러 API 키 값 가져오기
-api_keys = [secrets.get(f"gemini_api_key{i}") for i in range(1, 13) if secrets.get(f"gemini_api_key{i}")]
-
-# 인공지능 설정
-selected_api_key = api_keys[0]
-genai.configure(api_key=selected_api_key)
-
-# Streamlit 인터페이스
+# 스트림릿 앱 인터페이스 구성
 st.title("연구계획서 작성 도우미 📝")
 
-# 주의 문구
-st.warning("""
-⚠️ **주의:** 본 페이지는 개인의 API 키를 사용하고 있으므로 API 한도 초과에 따라 작동이 일정 기간 멈출 수 있습니다.
-계속 사용을 원하시는 분은 [G3 (API 입력) 페이지](https://aidt-seondo-2nd.streamlit.app/A3_(API%EC%9E%85%EB%A0%A5))를 참고해주세요.
-""")
+# 사이드바에 API 키 입력란 추가 및 안내 문구
+with st.sidebar:
+    user_api_key = st.text_input("API 키를 입력해주세요:", type="password")
+    st.write("""
+    💡 [API 키 발급 받기](https://aistudio.google.com/app/)
+    """)
+
+# API 키 설정 함수
+def configure_api(api_key):
+    genai.configure(api_key=api_key)
+
+if user_api_key:
+    configure_api(user_api_key)
+else:
+    st.error("API 키를 입력해주세요.")
 
 # 연구 주제 입력
 if "step" not in st.session_state:
@@ -35,7 +60,7 @@ left_col, right_col = st.columns(2)
 
 with left_col:
     if st.session_state.step == 0:
-        research_topic = st.text_input("연구 주제를 입력하세요 ✏️:")
+        research_topic = st.text_input("연구 주제를 입력하세요. ✏️")
         if st.button("다음 단계", key="next_step_0"):
             if research_topic:
                 st.session_state.details.append(f"연구 주제: {research_topic}")
@@ -163,8 +188,9 @@ with right_col:
 
 # 연구계획서 상세보기 생성 및 출력
 if st.session_state.step == 6:
+    
     if st.button("연구계획서 상세보기", key="generate_plan"):
-        prompt = "다음 연구계획서의 상세보기를 작성해주세요. 연구 계획의 장점을 3가지 알려주세요. 연구 수행 전 연구자가 추가로 고려해야 할 점을 1가지 알려주세요.:\n\n" + "\n".join(st.session_state.details)
+        prompt = "다음 연구계획서의 상세보기를 작성해주세요. 연구 계획의 장점을 3가지 알려주세요. 연구 수행 전 연구자가 추가로 고려야해할 점을 1가지 알려주세요.:\n\n" + "\n".join(st.session_state.details)
         model = genai.GenerativeModel(model_name="gemini-1.0-pro",
                                       generation_config={
                                           "temperature": 0.7,

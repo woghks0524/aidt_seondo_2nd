@@ -15,6 +15,5 @@ st.write("📧 2차 집합연수 수업자료 제작 요청 및 문의: [forinno
 
 # API 관련 안내 문구
 st.write("""
-💡 집합연수 시에는 [AI Studio](https://aistudio.google.com/app/)에서 직접 API 키를 받아서 사용할 예정입니다. 
-이는 접속자 폭주로 인해 자체 API 사용 시 서버 과부하 문제를 방지하기 위함입니다.
+💡 연수 시 접속자 폭주로 API의 한도량이 초과되어 페이지가 정지될 수 있습니다. 사용자가 직접 API를 발급받아 사용하시길 권장합니다. [AI Studio](https://aistudio.google.com/app/) w
 """)

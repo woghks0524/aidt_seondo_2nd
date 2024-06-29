@@ -33,7 +33,7 @@ def try_generate_content(api_key, prompt_parts):
         return None
 
 # 스트림릿 앱 인터페이스 구성
-st.title("교사 주도성 성찰 피드백 시스템")
+st.title("교사 주도성 성찰 피드백 시스템 📚")
 st.write("""
 1. 아래의 질문에 답을 선택하세요.
 2. 모든 질문에 답을 완료한 후 "피드백 생성하기" 버튼을 클릭하세요.
@@ -48,12 +48,12 @@ with st.sidebar:
     """)
 
 # 학습 주제와 수업 개요 입력란
-learning_topic = st.text_input("학습 주제를 입력해주세요:")
-lesson_overview = st.text_area("수업 개요를 입력해주세요:")
+learning_topic = st.text_input("학습 주제를 입력해주세요 ✏️:")
+lesson_overview = st.text_area("수업 개요를 입력해주세요 📋:")
 
 # 객관식 질문 구성
 activity_type = st.selectbox(
-    "어떤 유형의 활동을 진행했습니까?",
+    "어떤 유형의 활동을 진행했습니까? 🛠️",
     ["디지털 마인드맵 작성", "디지털 협력 프로젝트", "AI 기반 맞춤형 학습 경로 설계", "기타"]
 )
 
@@ -63,17 +63,17 @@ else:
     activity_type_detail = activity_type
 
 goal_achievement = st.selectbox(
-    "활동 목표를 달성했습니까?",
+    "활동 목표를 달성했습니까? 🎯",
     ["완전히 달성함", "대부분 달성함", "일부 달성함", "달성하지 못함"]
 )
 
 student_response = st.selectbox(
-    "학생들의 반응은 어땠습니까?",
+    "학생들의 반응은 어땠습니까? 😊",
     ["매우 긍정적", "긍정적", "보통", "부정적"]
 )
 
 digital_tool_usage = st.selectbox(
-    "디지털 도구를 어느 활동에 넣었습니까?",
+    "디지털 도구를 어느 활동에 넣었습니까? 💻",
     ["결과물 제작", "학생 평가", "수업 주요활동", "맞춤형 과제제시", "기타"]
 )
 
@@ -83,7 +83,7 @@ else:
     digital_tool_usage_detail = digital_tool_usage
 
 activity_difficulty = st.selectbox(
-    "활동을 진행하면서 어떤 어려움이 있었습니까?",
+    "활동을 진행하면서 어떤 어려움이 있었습니까? 🧗",
     ["디지털 도구 사용의 어려움", "학생들의 참여 부족", "기술적인 문제", "기타"]
 )
 
@@ -93,7 +93,7 @@ else:
     activity_difficulty_detail = activity_difficulty
 
 improvement_points = st.selectbox(
-    "다음 번에 이 활동을 다시 한다면 어떤 점을 개선하고 싶습니까?",
+    "다음 번에 이 활동을 다시 한다면 어떤 점을 개선하고 싶습니까? 🔧",
     ["디지털 도구 활용 방법 개선", "학생 참여 유도 방법 개선", "기술 지원 강화", "기타"]
 )
 
