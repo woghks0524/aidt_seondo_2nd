@@ -23,7 +23,7 @@ st.title("연구계획서 작성 도우미 📝")
 # 주의 문구
 st.warning("""
 ⚠️ **주의:** 본 페이지는 개인의 API 키를 사용하고 있으므로 API 한도 초과에 따라 작동이 일정 기간 멈출 수 있습니다.
-계속 사용을 원하시는 분은 [G3 (API 입력) 페이지](https://aidt-seondo-2nd.streamlit.app/A3_(API%EC%9E%85%EB%A0%A5))를 참고해주세요.
+계속 사용을 원하시는 분은 [G3 (API 입력) 페이지](https://aidt-seondo-2nd.streamlit.app/G3_(API%EC%9E%85%EB%A0%A5))를 참고해주세요.
 """)
 
 # 연구 주제 입력
