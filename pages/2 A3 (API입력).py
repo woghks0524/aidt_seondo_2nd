@@ -40,12 +40,16 @@ st.write("""
 3. 인공지능이 여러분의 답변을 바탕으로 평가, 칭찬, 더 생각할 점을 작성해줍니다.
 """)
 
-# 사이드바에 API 키 입력란 추가 및 안내 문구
+# 사이드바에 API 키 입력란 추가
 with st.sidebar:
     user_api_key = st.text_input("API 키를 입력해주세요:", type="password")
     st.write("""
     💡 [API 키 발급 받기](https://aistudio.google.com/app/)
     """)
+
+# 본문에 API 키 입력 경고 메시지
+if not user_api_key:
+    st.error("⚠️ API 키를 입력해주세요. API 키가 없으면 피드백을 생성할 수 없습니다.")
 
 # 학습 주제와 수업 개요 입력란
 learning_topic = st.text_input("학습 주제를 입력해주세요 ✏️:")
@@ -107,7 +111,9 @@ personal_reflection = st.text_area("이 활동을 통해 당신의 교육 철학
 
 # 입력 값 검증 및 인공지능 호출
 if st.button("피드백 생성하기"):
-    if not all([user_api_key, learning_topic, lesson_overview, activity_type_detail, goal_achievement, student_response, digital_tool_usage_detail, activity_difficulty_detail, improvement_points_detail, personal_reflection]):
+    if not user_api_key:
+        st.error("⚠️ API 키를 입력해주세요. API 키가 없으면 피드백을 생성할 수 없습니다.")
+    elif not all([learning_topic, lesson_overview, activity_type_detail, goal_achievement, student_response, digital_tool_usage_detail, activity_difficulty_detail, improvement_points_detail, personal_reflection]):
         st.warning("모든 질문에 답을 작성해주세요!")
     else:
         # 프롬프트 구성
