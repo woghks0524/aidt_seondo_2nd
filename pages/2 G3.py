@@ -160,7 +160,7 @@ if st.session_state.step == 6:
         st.write(detail)
     
     if st.button("연구계획서 상세보기", key="generate_plan"):
-        prompt = "다음 연구계획서의 상세보기를 작성해주세요:\n\n" + "\n".join(st.session_state.details)
+        prompt = "다음 연구계획서의 상세보기를 작성해주세요. 연구 계획의 장점을 3가지 알려주세요. 연구 수행 전 연구자가 추가로 고려야해할 점을 1가지 알려주세요.:\n\n" + "\n".join(st.session_state.details)
         model = genai.GenerativeModel(model_name="gemini-1.0-pro",
                                       generation_config={
                                           "temperature": 0.7,
