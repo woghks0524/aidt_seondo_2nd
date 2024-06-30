@@ -1,7 +1,7 @@
 import streamlit as st
 
 # 페이지 제목 설정
-st.set_page_config(page_title="교실혁명 선도교사 2차 연수 보조도구")
+st.set_page_config(page_title="교실혁명선도교사 2차연수 보조도구")
 
 # 홈 페이지 제목 및 설명
 st.title("교실혁명 선도교사 2차 연수 보조도구")
