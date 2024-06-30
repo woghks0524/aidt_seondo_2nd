@@ -19,5 +19,5 @@ st.write("📧 2차 집합연수 수업자료 제작 요청 및 문의: [forinno
 
 # API 관련 안내 문구
 st.write("""
-💡 연수 시 접속자 폭주로 API의 한도량이 초과되어 페이지가 정지될 수 있습니다. 사용자가 직접 API를 발급받아 사용하시길 권장합니다. [AI Studio](https://aistudio.google.com/app/) w
+💡 연수 시 접속자 폭주로 API의 한도량이 초과되어 페이지가 정지될 수 있습니다. 사용자가 직접 API를 발급받아 사용하시길 권장합니다. [AI Studio](https://aistudio.google.com/app/apikey)
 """)
