@@ -44,7 +44,7 @@ st.write("""
 with st.sidebar:
     user_api_key = st.text_input("API 키를 입력해주세요:", type="password")
     st.write("""
-    💡 [API 키 발급 받기](https://aistudio.google.com/app/)
+    💡 [API 키 발급 받기](https://aistudio.google.com/app/apikey)
     """)
 
 # 본문에 API 키 입력 경고 메시지
