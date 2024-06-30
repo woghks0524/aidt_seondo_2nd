@@ -112,13 +112,13 @@ with st.sidebar:
 def configure_api(api_key):
     genai.configure(api_key=api_key)
 
+# 앱 제목
+st.title("개별 및 협력학습 설계 시 과정중심평가와 성찰계획 수립을 위한 체크리스트")
+
 if user_api_key:
     configure_api(user_api_key)
 else:
     st.error("API 키를 입력해주세요.")
-
-# 앱 제목
-st.title("개별 및 협력학습 설계 시 과정중심평가와 성찰계획 수립을 위한 체크리스트")
 
 # 수업안 랜덤 선택 버튼
 if st.button("랜덤 뽑기"):
