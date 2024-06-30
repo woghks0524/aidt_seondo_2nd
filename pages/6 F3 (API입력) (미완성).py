@@ -5,20 +5,6 @@ import toml
 import pathlib
 import google.generativeai as genai
 
-# secrets.toml 파일 경로
-secrets_path = pathlib.Path(__file__).parent.parent / ".streamlit/secrets.toml"
-
-# secrets.toml 파일 읽기
-with open(secrets_path, "r") as f:
-    secrets = toml.load(f)
-
-# 여러 API 키 값 가져오기
-api_keys = [secrets.get(f"gemini_api_key{i}") for i in range(1, 13) if secrets.get(f"gemini_api_key{i}")]
-
-# 인공지능 설정
-selected_api_key = api_keys[0]
-genai.configure(api_key=selected_api_key)
-
 # 체크리스트 항목 구조화
 checklist = {
     "삶과 맥락 & 수업 및 학습자 분석": [
@@ -115,6 +101,22 @@ sample_lessons = [
 6) 최종 보고서 작성 및 제출: 클라우드 문서 도구를 통해 최종 보고서 작성, 교사 평가 및 피드백 제공"""
 ]
 
+# 사이드바에 API 키 입력란 추가 및 안내 문구
+with st.sidebar:
+    user_api_key = st.text_input("API 키를 입력해주세요:", type="password")
+    st.write("""
+    💡 [API 키 발급 받기](https://aistudio.google.com/app/apikey)
+    """)
+
+# API 키 설정 함수
+def configure_api(api_key):
+    genai.configure(api_key=api_key)
+
+if user_api_key:
+    configure_api(user_api_key)
+else:
+    st.error("API 키를 입력해주세요.")
+
 # 앱 제목
 st.title("수업안 평가 체크리스트")
 
@@ -153,7 +155,7 @@ if "selected_lesson" in st.session_state:
                 "\n\n수업안에 대해 교사가 체크리스트로 평가한 결과입니다. 각 체크리스트는 1점부터 5점까지 이루어져 있으며, 1점은 가장 낮은 점수입니다. "
                 "교사가 실시한 평가 결과를 수업안과 비교하여 비판적으로 인공지능으로 검토해주세요. 교사가 준 점수가 옳지 않다고 여기면 점검해 주고 이유를 꼭 이야기해 주세요. 예를 들어 낮은 점수를 주었는데, 수업안에 반영되어 있는 항목이라면 어느 부분을 살펴보라고 말해주세요."
             )
-            model = genai.GenerativeModel(model_name="gemini-1.0-pro",
+            model = genai.GenerativeModel(model_name="gemini-1.5-flash",
                                           generation_config={
                                               "temperature": 0.7,
                                               "max_output_tokens": 3000,
