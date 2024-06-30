@@ -13,11 +13,13 @@ st.markdown("[👉 A3: 교사 주도성 성찰 피드백 시스템으로 이동�
 # G3 페이지로 이동하는 링크
 st.markdown("[👉 G3: 연구계획서 작성도우미로 이동하기](https://aidt-seondo-2nd.streamlit.app/G3)")
 
+# F3 페이지로 이동하는 링크
+st.markdown("[👉 G3: 연구계획서 작성도우미로 이동하기](https://aidt-seondo-2nd.streamlit.app/F3)")
 
 # 2차 집합연수 수업자료 제작 요청 및 문의
-st.write("📧 2차 집합연수 수업자료 제작 요청 및 문의: [forinnocen@naver.com](mailto:forinnocen@naver.com)")
+st.write("📧 2차 집합연수 수업자료 제작 요청 및 문의: 서울특별시융합과학교육원 교사 정용석 [forinnocen@naver.com](mailto:forinnocen@naver.com)")
 
 # API 관련 안내 문구
 st.write("""
-💡 연수 시 접속자 폭주로 API의 한도량이 초과되어 페이지가 정지될 수 있습니다. 사용자가 직접 API를 발급받아 사용하시길 권장합니다. [AI Studio](https://aistudio.google.com/app/apikey)
+💡 연수 시 접속자 폭주로 API의 한도량이 초과되어 페이지가 정지될 수 있습니다. 각 사용자가 직접 API를 발급받아 사용하시길 적극 권장합니다. [AI Studio](https://aistudio.google.com/app/apikey)
 """)

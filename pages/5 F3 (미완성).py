@@ -116,7 +116,13 @@ sample_lessons = [
 ]
 
 # 앱 제목
-st.title("수업안 평가 체크리스트")
+st.title("개별 및 협력학습 설계 시 과정중심평가와 성찰계획 수립을 위한 체크리스트")
+
+# 주의 문구
+st.warning("""
+⚠️ **주의:** 본 페이지는 개인의 API 키를 사용하고 있으므로 API 한도 초과에 따라 작동이 일정 기간 멈출 수 있습니다.
+계속 사용을 원하시는 분은 [F3 (API 입력) 페이지](https://aidt-seondo-2nd.streamlit.app/F3_(API%EC%9E%85%EB%A0%A5)_(%EB%AF%B8%EC%99%84%EC%84%B1))를 참고해주세요.
+""")
 
 # 수업안 랜덤 선택 버튼
 if st.button("랜덤 뽑기"):
