@@ -3,7 +3,7 @@ import random
 import toml
 import pathlib
 from openai import OpenAI
-import pandas as pd
+import matplotlib.pyplot as plt
 
 # secrets.toml 파일 경로
 secrets_path = pathlib.Path(__file__).parent.parent / ".streamlit/secrets.toml"
@@ -25,6 +25,7 @@ persona_traits = ["집중력", "기기친숙도", "구두언어 사용 빈도", 
 # Streamlit 앱 인터페이스 구성
 st.title("하이터치 시뮬레이션 🎨")
 st.write("학생의 페르소나가 무작위로 생성됩니다. AIDT 카드를 이용해 하이터치를 시도해보세요.")
+st.write("본 이미지생성기구의 비용은 서울특별시교육청 AI에듀테크선도교사 연구비에서 지출됩니다.")
 
 # 입력 값 검증 및 이미지 생성
 if st.button("어떤 학생이 나타날까요?"):
@@ -34,8 +35,17 @@ if st.button("어떤 학생이 나타날까요?"):
 
     # 선택된 페르소나 특성 및 게이지 시각화
     st.write("선택된 페르소나 특성 및 게이지:")
-    traits_df = pd.DataFrame(list(selected_gauges.items()), columns=['Trait', 'Gauge'])
-    st.bar_chart(traits_df.set_index('Trait'))
+
+    # Matplotlib을 사용하여 막대 그래프 생성
+    fig, ax = plt.subplots()
+    ax.barh(list(selected_gauges.keys()), list(selected_gauges.values()), color='skyblue')
+    ax.set_xlim(0, 5)
+    ax.set_xticks([1, 2, 3, 4, 5])
+    ax.set_xlabel('Gauge')
+    ax.set_title('Selected Persona Traits and Gauges')
+
+    # Streamlit에 그래프 표시
+    st.pyplot(fig)
 
     # 프롬프트 구성
     final_description = ", ".join([f"{trait} {gauge} out of 5" for trait, gauge in selected_gauges.items()])
