@@ -3,6 +3,7 @@ import random
 import toml
 import pathlib
 from openai import OpenAI
+import pandas as pd
 
 # secrets.toml 파일 경로
 secrets_path = pathlib.Path(__file__).parent.parent / ".streamlit/secrets.toml"
@@ -22,18 +23,19 @@ client = OpenAI(api_key=selected_api_key)
 persona_traits = ["집중력", "기기친숙도", "구두언어 사용 빈도", "과제집착력", "학업스트레스", "자기조절", "가정환경", "학업성취도", "메타인지"]
 
 # Streamlit 앱 인터페이스 구성
-st.title("학생 페르소나 하이터치 게임 🎨")
+st.title("하이터치 시뮬레이션 🎨")
 st.write("학생의 페르소나가 무작위로 생성됩니다. AIDT 카드를 이용해 하이터치를 시도해보세요.")
 
 # 입력 값 검증 및 이미지 생성
-if st.button("이미지 생성하기"):
+if st.button("어떤 학생이 나타날까요?"):
     # 무작위로 3개의 페르소나 특성 선택
     selected_traits = random.sample(persona_traits, 3)
     selected_gauges = {trait: random.choice([1, 2, 3, 4, 5]) for trait in selected_traits}
 
+    # 선택된 페르소나 특성 및 게이지 시각화
     st.write("선택된 페르소나 특성 및 게이지:")
-    for trait, gauge in selected_gauges.items():
-        st.write(f"{trait}: {gauge}")
+    traits_df = pd.DataFrame(list(selected_gauges.items()), columns=['Trait', 'Gauge'])
+    st.bar_chart(traits_df.set_index('Trait'))
 
     # 프롬프트 구성
     final_description = ", ".join([f"{trait} {gauge} out of 5" for trait, gauge in selected_gauges.items()])
@@ -52,6 +54,11 @@ if st.button("이미지 생성하기"):
 
         # 생성된 이미지 출력
         st.image(image_url, caption="생성된 학생 페르소나 이미지")
+
+        # 페르소나 종류와 숫자 텍스트로 표시
+        st.write("페르소나 특성 및 게이지:")
+        for trait, gauge in selected_gauges.items():
+            st.write(f"{trait}: {gauge}")
 
         # 이미지 다운로드 링크 제공
         st.markdown(f"[이미지 다운로드]({image_url})")
