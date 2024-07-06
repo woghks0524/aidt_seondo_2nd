@@ -56,12 +56,7 @@ if st.button("어떤 학생이 나타날까요?"):
         image_url = response.data[0].url
 
         # 생성된 이미지 출력
-        st.image(image_url, caption="생성된 학생 페르소나 이미지")
-
-        # 페르소나 종류와 숫자 텍스트로 표시
-        st.write("페르소나 특성 및 게이지:")
-        for trait, gauge in selected_gauges.items():
-            st.write(f"{trait}: {gauge}")
+        st.image(image_url)
 
     except Exception as e:
         st.error(f"이미지 생성에 실패했습니다: {e}")
