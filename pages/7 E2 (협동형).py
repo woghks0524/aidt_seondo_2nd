@@ -39,13 +39,15 @@ st.markdown("""
         <li>🕒 오른쪽 위의 RUNNING이 끝나면 그림과 함께 학생의 정보가 나타납니다.</li>
         <li>👀 학생의 정보를 보고 나의 AIDT 기능카드를 본 후 어떤 하이터치를 할 수 있을지 생각합니다.</li>
         <li>🔔 모둠 가운데 종을 치고 해당되는 AIDT 카드를 내려놓으며 하이터치 계획을 말합니다.</li>
-        <li>👍 모둠원의 과반수가 하이터치 계획에 동의할 경우 해당 AIDT 카드를 카드덱에 넣습니다.</li>
-        <li>🏆 위 과정을 반복하여 카드덱이 모두 떨어진 사람이 승리합니다.</li>
+        <li>👍 모둠원의 과반수가 하이터치 계획에 동의할 경우 자신의 AIDT 카드를 중앙의 카드덱에 버립니다.</li>
+        <li>🏆 위 과정을 반복하여 자신의 카드덱이 모두 없어진 사람이 승리합니다.</li>
     </ul>
 </div>
 """, unsafe_allow_html=True)
 
 st.markdown("이 이미지생성도구의 사용 비용은 서울특별시교육청 AI 에듀테크 선도교사 운영비로 지출됩니다.")
+st.markdown("제작자: 서울특별시교육청융합과학교육원 정용석, 함현초등학교 권혜영")
+
 
 # 입력 값 검증 및 이미지 생성
 if st.button("어떤 학생이 나타날까요?"):
@@ -87,4 +89,4 @@ if st.button("어떤 학생이 나타날까요?"):
 if st.button("다시 시작하기"):
     st.experimental_rerun()
 
-st.markdown("[AIDT 카드 다운로드](https://drive.google.com/file/d/1F7_E5cXGg3W3j8o6nJHfT6aD3d0QYZfP/view?usp=sharing)")
+st.markdown("[AIDT 카드 다운로드(준비중)](https://drive.google.com/file/d/1F7_E5cXGg3W3j8o6nJHfT6aD3d0QYZfP/view?usp=sharing)")
