@@ -37,7 +37,6 @@ if st.button("어떤 학생이 나타날까요?"):
     gender = random.choice(genders)
 
     # 선택된 페르소나 특성 및 게이지 시각화
-    st.write("선택된 페르소나 특성 및 게이지:")
     traits_df = pd.DataFrame(list(selected_gauges.items()), columns=['Trait', 'Gauge'])
     st.bar_chart(traits_df.set_index('Trait'))
 
@@ -63,9 +62,6 @@ if st.button("어떤 학생이 나타날까요?"):
         st.write("페르소나 특성 및 게이지:")
         for trait, gauge in selected_gauges.items():
             st.write(f"{trait}: {gauge}")
-
-        # 이미지 다운로드 링크 제공
-        st.markdown(f"[이미지 다운로드]({image_url})")
 
     except Exception as e:
         st.error(f"이미지 생성에 실패했습니다: {e}")
