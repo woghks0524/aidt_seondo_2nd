@@ -21,16 +21,20 @@ client = OpenAI(api_key=selected_api_key)
 
 # 페르소나 특성 정의
 persona_traits = ["집중력", "기기친숙도", "구두언어 사용 빈도", "과제집착력", "학업스트레스", "자기조절", "가정환경", "학업성취도", "메타인지"]
+genders = ["boy", "girl"]
 
 # Streamlit 앱 인터페이스 구성
 st.title("하이터치 시뮬레이션 🎨")
 st.write("학생의 페르소나가 무작위로 생성됩니다. AIDT 카드를 이용해 하이터치를 시도해보세요.")
+st.markdown("[AIDT 카드 다운로드](https://drive.google.com/file/d/1F7_E5cXGg3W3j8o6nJHfT6aD3d0QYZfP/view?usp=sharing)")
+st.markdown("이 이미지생성도구의 사용 비용은 서울특별시교육청 AI 에듀테크 선도교사 운영비로 지출됩니다.")
 
 # 입력 값 검증 및 이미지 생성
 if st.button("어떤 학생이 나타날까요?"):
     # 무작위로 3개의 페르소나 특성 선택
     selected_traits = random.sample(persona_traits, 3)
     selected_gauges = {trait: random.choice([1, 2, 3, 4, 5]) for trait in selected_traits}
+    gender = random.choice(genders)
 
     # 선택된 페르소나 특성 및 게이지 시각화
     st.write("선택된 페르소나 특성 및 게이지:")
@@ -38,8 +42,8 @@ if st.button("어떤 학생이 나타날까요?"):
     st.bar_chart(traits_df.set_index('Trait'))
 
     # 프롬프트 구성
-    final_description = ", ".join([f"{trait} {gauge} out of 5" for trait, gauge in selected_gauges.items()])
-    prompt = f"Caricature of an elementary school student with the following traits: {final_description}"
+    trait_descriptions = ", ".join([f"{trait} {gauge} out of 5" for trait, gauge in selected_gauges.items()])
+    prompt = f"Caricature of an elementary school {gender}, cartoon style, reflecting traits such as {trait_descriptions}. The image should not contain any text."
 
     # DALL-E API 호출 시도
     try:
