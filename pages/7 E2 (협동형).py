@@ -101,4 +101,4 @@ if st.button("어떤 학생이 나타날까요?"):
 if st.button("다시 시작하기"):
     st.experimental_rerun()
 
-st.markdown("[AIDT 카드 다운로드 - 인쇄하여 사용하세요.](https://drive.google.com/drive/folders/16qeyWC8mT6Sb-U534d7_qX5rXzuhlk8o?usp=drive_link)")
+st.markdown("[AIDT 카드(Canva) 다운로드 - 인쇄하여 사용하세요.](https://drive.google.com/drive/folders/16qeyWC8mT6Sb-U534d7_qX5rXzuhlk8o?usp=drive_link)")
