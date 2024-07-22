@@ -35,7 +35,7 @@ left_col, right_col = st.columns(2)
 def call_openai(prompt):
     try:
         completion = client.chat.completions.create(
-            model="gpt-4o",
+            model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": prompt}
