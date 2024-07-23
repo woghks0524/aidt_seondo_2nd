@@ -3,6 +3,19 @@ import streamlit as st
 # 페이지 제목 설정
 st.set_page_config(page_title="교실혁명선도교사 2차연수 보조도구")
 
+hide_github_icon = """
+    <style>
+    .css-1jc7ptx, .e1ewe7hr3, .viewerBadge_container__1QSob,
+    .styles_viewerBadge__1yB5_, .viewerBadge_link__1S137,
+    .viewerBadge_text__1JaDK{ display: none; }
+    #MainMenu{ visibility: hidden; }
+    footer { visibility: hidden; }
+    header { visibility: hidden; }
+    </style>
+"""
+
+st.markdown(hide_github_icon, unsafe_allow_html=True)
+
 # 홈 페이지 제목 및 설명
 st.title("교실혁명선도교사 2차연수 보조도구")
 st.write("🔍 이 도구는 교실혁명 선도교사 2차 연수를 보조하기 위해 설계되었습니다. 아래 링크를 클릭하여 A3 페이지로 이동하세요.")

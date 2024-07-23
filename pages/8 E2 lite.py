@@ -3,6 +3,19 @@ import random
 import pathlib
 import pandas as pd
 
+hide_github_icon = """
+    <style>
+    .css-1jc7ptx, .e1ewe7hr3, .viewerBadge_container__1QSob,
+    .styles_viewerBadge__1yB5_, .viewerBadge_link__1S137,
+    .viewerBadge_text__1JaDK{ display: none; }
+    #MainMenu{ visibility: hidden; }
+    footer { visibility: hidden; }
+    header { visibility: hidden; }
+    </style>
+"""
+
+st.markdown(hide_github_icon, unsafe_allow_html=True)
+
 # 페르소나 특성 정의
 persona_traits = ["학습집중력", "기기친숙도", "전시학습이해도", "과제집착력", "학업스트레스", "자기조절", "가정환경", "학업성취도"]
 learning_preferences = ["개인학습선호", "협동학습선호"]

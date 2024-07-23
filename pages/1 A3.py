@@ -5,11 +5,24 @@ import streamlit as st
 import toml
 import random
 
+hide_github_icon = """
+    <style>
+    .css-1jc7ptx, .e1ewe7hr3, .viewerBadge_container__1QSob,
+    .styles_viewerBadge__1yB5_, .viewerBadge_link__1S137,
+    .viewerBadge_text__1JaDK{ display: none; }
+    #MainMenu{ visibility: hidden; }
+    footer { visibility: hidden; }
+    header { visibility: hidden; }
+    </style>
+"""
+
+st.markdown(hide_github_icon, unsafe_allow_html=True)
+
 # secrets.toml 파일 경로
 secrets_path = pathlib.Path(__file__).parent.parent / ".streamlit/secrets.toml"
 
-# secrets.toml 파일 읽기
-with open(secrets_path, "r") as f:
+# secrets.toml 파일 읽기 (UTF-8 인코딩으로)
+with open(secrets_path, "r", encoding="utf-8") as f:
     secrets = toml.load(f)
 
 # secrets.toml 파일에서 여러 API 키 값 가져오기
@@ -37,7 +50,7 @@ def try_generate_content(api_key, prompt_parts):
     genai.configure(api_key=api_key)
     
     # 설정된 모델 변경
-    model = genai.GenerativeModel(model_name="gemini-1.0-pro",
+    model = genai.GenerativeModel(model_name="gemini-1.5-flash",
                                   generation_config={
                                       "temperature": 0.9,
                                       "top_p": 1,
@@ -136,43 +149,44 @@ if st.button("피드백 생성하기"):
     if not all([learning_topic, lesson_overview, activity_type_detail, goal_achievement, student_response, digital_tool_usage_detail, activity_difficulty_detail, improvement_points_detail, personal_reflection]):
         st.warning("모든 질문에 답을 작성해주세요!")
     else:
-        # 프롬프트 구성
-        prompt = f"""
-        다음은 교사가 수행한 교육 활동에 대한 설명과 성찰입니다. 이 설명과 성찰을 바탕으로 활동의 장점과 부족한 점을 평가하고, 개선할 수 있는 방법을 제안해주세요.
+        with st.spinner("피드백을 생성 중입니다. 잠시만 기다려주세요..."):
+            # 프롬프트 구성
+            prompt = f"""
+            다음은 교사가 수행한 교육 활동에 대한 설명과 성찰입니다. 이 설명과 성찰을 바탕으로 활동의 장점과 부족한 점을 평가하고, 개선할 수 있는 방법을 제안해주세요.
 
-        학습 주제: {learning_topic}
-        수업 개요: {lesson_overview}
-        활동 유형: {activity_type_detail}
-        활동 목표 달성 여부: {goal_achievement}
-        학생들의 반응: {student_response}
-        디지털 도구 사용 활동: {digital_tool_usage_detail}
-        활동의 어려움: {activity_difficulty_detail}
-        개선할 점: {improvement_points_detail}
-        개인적 성찰: {personal_reflection}
+            학습 주제: {learning_topic}
+            수업 개요: {lesson_overview}
+            활동 유형: {activity_type_detail}
+            활동 목표 달성 여부: {goal_achievement}
+            학생들의 반응: {student_response}
+            디지털 도구 사용 활동: {digital_tool_usage_detail}
+            활동의 어려움: {activity_difficulty_detail}
+            개선할 점: {improvement_points_detail}
+            개인적 성찰: {personal_reflection}
 
-        이 답변들을 바탕으로 교사에게 유용한 피드백을 제공해주세요.
-        """
+            이 답변들을 바탕으로 교사에게 유용한 피드백을 제공해주세요.
+            """
 
-        # API 호출 시도
-        response_text = try_generate_content(selected_api_key, prompt)
-        
-        # 첫 번째 API 키 실패 시, 다른 API 키로 재시도
-        if response_text is None:
-            for api_key in api_keys:
-                if api_key != selected_api_key:
-                    response_text = try_generate_content(api_key, prompt)
-                    if response_text is not None:
-                        break
-        
-        # 결과 출력
-        if response_text is not None:
-            st.success("피드백 생성 완료!")
-            st.text_area("생성된 피드백:", value=response_text, height=300)
-            combined_text = f"사용자 입력:\n\n학습 주제: {learning_topic}\n수업 개요: {lesson_overview}\n활동 유형: {activity_type_detail}\n활동 목표 달성 여부: {goal_achievement}\n학생들의 반응: {student_response}\n디지털 도구 사용 활동: {digital_tool_usage_detail}\n활동의 어려움: {activity_difficulty_detail}\n개선할 점: {improvement_points_detail}\n개인적 성찰: {personal_reflection}\n\n인공지능 피드백:\n\n{response_text}"
-            st.download_button(label="피드백 다운로드", data=combined_text, file_name="generated_feedback.txt", mime="text/plain")
-            st.write("인공지능이 생성한 피드백은 꼭 본인이 확인해야 합니다. 생성된 피드백을 검토하고, 필요한 경우 수정하세요.")
-        else:
-            st.error("API 호출에 실패했습니다. 나중에 다시 시도해주세요.")
+            # API 호출 시도
+            response_text = try_generate_content(selected_api_key, prompt)
+            
+            # 첫 번째 API 키 실패 시, 다른 API 키로 재시도
+            if response_text is None:
+                for api_key in api_keys:
+                    if api_key != selected_api_key:
+                        response_text = try_generate_content(api_key, prompt)
+                        if response_text is not None:
+                            break
+            
+            # 결과 출력
+            if response_text is not None:
+                st.success("피드백 생성 완료!")
+                st.text_area("생성된 피드백:", value=response_text, height=300)
+                combined_text = f"사용자 입력:\n\n학습 주제: {learning_topic}\n수업 개요: {lesson_overview}\n활동 유형: {activity_type_detail}\n활동 목표 달성 여부: {goal_achievement}\n학생들의 반응: {student_response}\n디지털 도구 사용 활동: {digital_tool_usage_detail}\n활동의 어려움: {activity_difficulty_detail}\n개선할 점: {improvement_points_detail}\n개인적 성찰: {personal_reflection}\n\n인공지능 피드백:\n\n{response_text}"
+                st.download_button(label="피드백 다운로드", data=combined_text, file_name="generated_feedback.txt", mime="text/plain")
+                st.write("인공지능이 생성한 피드백은 꼭 본인이 확인해야 합니다. 생성된 피드백을 검토하고, 필요한 경우 수정하세요.")
+            else:
+                st.error("API 호출에 실패했습니다. 나중에 다시 시도해주세요.")
 
 # 세션 초기화 버튼
 if st.button("다시 시작하기"):

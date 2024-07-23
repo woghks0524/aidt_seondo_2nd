@@ -5,11 +5,22 @@ import pathlib
 from openai import OpenAI
 import pandas as pd
 
-# secrets.toml 파일 경로
-secrets_path = pathlib.Path(__file__).parent.parent / ".streamlit/secrets.toml"
+# GitHub 아이콘 및 기타 UI 요소 숨기기
+hide_github_icon = """
+    <style>
+    .css-1jc7ptx, .e1ewe7hr3, .viewerBadge_container__1QSob,
+    .styles_viewerBadge__1yB5_, .viewerBadge_link__1S137,
+    .viewerBadge_text__1JaDK{ display: none; }
+    #MainMenu{ visibility: hidden; }
+    footer { visibility: hidden; }
+    header { visibility: hidden; }
+    </style>
+"""
+st.markdown(hide_github_icon, unsafe_allow_html=True)
 
-# secrets.toml 파일 읽기
-with open(secrets_path, "r") as f:
+# secrets.toml 파일 경로 설정 및 파일 읽기
+secrets_path = pathlib.Path(__file__).parent.parent / ".streamlit/secrets.toml"
+with open(secrets_path, "r", encoding="utf-8") as f:
     secrets = toml.load(f)
 
 # 여러 API 키 값 가져오기
@@ -58,7 +69,6 @@ st.markdown("""
 st.markdown("이 이미지생성도구의 사용 비용은 서울특별시교육청 AI 에듀테크 선도교사 운영비로 지출됩니다.")
 st.markdown("제작자: 서울특별시교육청융합과학교육원 정용석, 함현초등학교 권혜영")
 
-
 # 입력 값 검증 및 이미지 생성
 if st.button("어떤 학생이 나타날까요?"):
     # 무작위로 3개의 페르소나 특성 선택
@@ -75,22 +85,23 @@ if st.button("어떤 학생이 나타날까요?"):
     container = st.container()
 
     with container:
-        # DALL-E API 호출 시도
-        try:
-            response = client.images.generate(
-                model="dall-e-3",
-                prompt=prompt,
-                size="1024x1024",
-                quality="standard",
-                n=1,
-            )
-            image_url = response.data[0].url
+        with st.spinner("이미지를 생성 중입니다... 잠시만 기다려주세요..."):
+            # DALL-E API 호출 시도
+            try:
+                response = client.images.generate(
+                    model="dall-e-3",
+                    prompt=prompt,
+                    size="1024x1024",
+                    quality="standard",
+                    n=1,
+                )
+                image_url = response.data[0].url
 
-            # 생성된 이미지 출력
-            st.image(image_url, caption="생성된 학생 페르소나 이미지")
+                # 생성된 이미지 출력
+                st.image(image_url, caption="생성된 학생 페르소나 이미지")
 
-        except Exception as e:
-            st.error(f"이미지 생성에 실패했습니다: {e}")
+            except Exception as e:
+                st.error(f"이미지 생성에 실패했습니다: {e}")
 
         # 선택된 페르소나 특성 및 게이지 시각화
         selected_gauges["학습선호도"] = selected_learning_preference

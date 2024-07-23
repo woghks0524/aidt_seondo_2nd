@@ -1,34 +1,48 @@
-import pathlib
 import textwrap
 import google.generativeai as genai
 import streamlit as st
 import random
+
+# GitHub 아이콘 및 기타 UI 요소 숨기기
+hide_github_icon = """
+    <style>
+    .css-1jc7ptx, .e1ewe7hr3, .viewerBadge_container__1QSob,
+    .styles_viewerBadge__1yB5_, .viewerBadge_link__1S137,
+    .viewerBadge_text__1JaDK{ display: none; }
+    #MainMenu{ visibility: hidden; }
+    footer { visibility: hidden; }
+    header { visibility: hidden; }
+    </style>
+"""
+st.markdown(hide_github_icon, unsafe_allow_html=True)
 
 # few-shot 프롬프트 구성 함수
 def try_generate_content(api_key, prompt_parts):
     # API 키를 설정
     genai.configure(api_key=api_key)
     
-    # 설정된 모델 변경
-    model = genai.GenerativeModel(model_name="gemini-1.0-pro",
-                                  generation_config={
-                                      "temperature": 0.9,
-                                      "top_p": 1,
-                                      "top_k": 1,
-                                      "max_output_tokens": 2048,
-                                  },
-                                  safety_settings=[
-                                      {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
-                                      {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
-                                      {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
-                                      {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
-                                  ])
+    # 모델 설정
+    model = genai.GenerativeModel(
+        model_name="gemini-1.5-flash",
+        generation_config={
+            "temperature": 0.9,
+            "top_p": 1,
+            "top_k": 1,
+            "max_output_tokens": 2048,
+        },
+        safety_settings=[
+            {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+            {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+            {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+            {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+        ]
+    )
     try:
         # 콘텐츠 생성 시도
         response = model.generate_content(prompt_parts)
         return response.text
     except Exception as e:
-        # 예외 발생시 None 반환
+        # 예외 발생 시 None 반환
         print(f"API 호출 실패: {e}")
         return None
 
@@ -43,9 +57,7 @@ st.write("""
 # 사이드바에 API 키 입력란 추가
 with st.sidebar:
     user_api_key = st.text_input("API 키를 입력해주세요:", type="password")
-    st.write("""
-    💡 [API 키 발급 받기](https://aistudio.google.com/app/apikey)
-    """)
+    st.write("💡 [API 키 발급 받기](https://aistudio.google.com/app/apikey)")
 
 # 본문에 API 키 입력 경고 메시지
 if not user_api_key:
@@ -116,35 +128,36 @@ if st.button("피드백 생성하기"):
     elif not all([learning_topic, lesson_overview, activity_type_detail, goal_achievement, student_response, digital_tool_usage_detail, activity_difficulty_detail, improvement_points_detail, personal_reflection]):
         st.warning("모든 질문에 답을 작성해주세요!")
     else:
-        # 프롬프트 구성
-        prompt = f"""
-        다음은 교사가 수행한 교육 활동에 대한 설명과 성찰입니다. 이 설명과 성찰을 바탕으로 활동의 장점과 부족한 점을 평가하고, 개선할 수 있는 방법을 제안해주세요.
+        with st.spinner("피드백을 생성 중입니다. 잠시만 기다려주세요..."):
+            # 프롬프트 구성
+            prompt = f"""
+            다음은 교사가 수행한 교육 활동에 대한 설명과 성찰입니다. 이 설명과 성찰을 바탕으로 활동의 장점과 부족한 점을 평가하고, 개선할 수 있는 방법을 제안해주세요.
 
-        학습 주제: {learning_topic}
-        수업 개요: {lesson_overview}
-        활동 유형: {activity_type_detail}
-        활동 목표 달성 여부: {goal_achievement}
-        학생들의 반응: {student_response}
-        디지털 도구 사용 활동: {digital_tool_usage_detail}
-        활동의 어려움: {activity_difficulty_detail}
-        개선할 점: {improvement_points_detail}
-        개인적 성찰: {personal_reflection}
+            학습 주제: {learning_topic}
+            수업 개요: {lesson_overview}
+            활동 유형: {activity_type_detail}
+            활동 목표 달성 여부: {goal_achievement}
+            학생들의 반응: {student_response}
+            디지털 도구 사용 활동: {digital_tool_usage_detail}
+            활동의 어려움: {activity_difficulty_detail}
+            개선할 점: {improvement_points_detail}
+            개인적 성찰: {personal_reflection}
 
-        이 답변들을 바탕으로 교사에게 유용한 피드백을 제공해주세요.
-        """
+            이 답변들을 바탕으로 교사에게 유용한 피드백을 제공해주세요.
+            """
 
-        # API 호출 시도
-        response_text = try_generate_content(user_api_key, prompt)
-        
-        # 결과 출력
-        if response_text is not None:
-            st.success("피드백 생성 완료!")
-            st.text_area("생성된 피드백:", value=response_text, height=300)
-            combined_text = f"사용자 입력:\n\n학습 주제: {learning_topic}\n수업 개요: {lesson_overview}\n활동 유형: {activity_type_detail}\n활동 목표 달성 여부: {goal_achievement}\n학생들의 반응: {student_response}\n디지털 도구 사용 활동: {digital_tool_usage_detail}\n활동의 어려움: {activity_difficulty_detail}\n개선할 점: {improvement_points_detail}\n개인적 성찰: {personal_reflection}\n\n인공지능 피드백:\n\n{response_text}"
-            st.download_button(label="피드백 다운로드", data=combined_text, file_name="generated_feedback.txt", mime="text/plain")
-            st.write("인공지능이 생성한 피드백은 꼭 본인이 확인해야 합니다. 생성된 피드백을 검토하고, 필요한 경우 수정하세요.")
-        else:
-            st.error("API 호출에 실패했습니다. 나중에 다시 시도해주세요.")
+            # API 호출 시도
+            response_text = try_generate_content(user_api_key, prompt)
+            
+            # 결과 출력
+            if response_text is not None:
+                st.success("피드백 생성 완료!")
+                st.text_area("생성된 피드백:", value=response_text, height=300)
+                combined_text = f"사용자 입력:\n\n학습 주제: {learning_topic}\n수업 개요: {lesson_overview}\n활동 유형: {activity_type_detail}\n활동 목표 달성 여부: {goal_achievement}\n학생들의 반응: {student_response}\n디지털 도구 사용 활동: {digital_tool_usage_detail}\n활동의 어려움: {activity_difficulty_detail}\n개선할 점: {improvement_points_detail}\n개인적 성찰: {personal_reflection}\n\n인공지능 피드백:\n\n{response_text}"
+                st.download_button(label="피드백 다운로드", data=combined_text, file_name="generated_feedback.txt", mime="text/plain")
+                st.write("인공지능이 생성한 피드백은 꼭 본인이 확인해야 합니다. 생성된 피드백을 검토하고, 필요한 경우 수정하세요.")
+            else:
+                st.error("API 호출에 실패했습니다. 나중에 다시 시도해주세요.")
 
 # 세션 초기화 버튼
 if st.button("다시 시작하기"):

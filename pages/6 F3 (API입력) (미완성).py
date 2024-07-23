@@ -5,6 +5,19 @@ import toml
 import pathlib
 import google.generativeai as genai
 
+# GitHub 아이콘 및 기타 UI 요소 숨기기
+hide_github_icon = """
+    <style>
+    .css-1jc7ptx, .e1ewe7hr3, .viewerBadge_container__1QSob,
+    .styles_viewerBadge__1yB5_, .viewerBadge_link__1S137,
+    .viewerBadge_text__1JaDK{ display: none; }
+    #MainMenu{ visibility: hidden; }
+    footer { visibility: hidden; }
+    header { visibility: hidden; }
+    </style>
+"""
+st.markdown(hide_github_icon, unsafe_allow_html=True)
+
 # 체크리스트 항목 구조화
 checklist = {
     "삶과 맥락 & 수업 및 학습자 분석": [
@@ -148,26 +161,29 @@ if "selected_lesson" in st.session_state:
             st.success("평가 결과가 저장되었습니다.")
 
         if st.button("AI 검토"):
-            prompt = (
-                f"수업안:\n{st.session_state.selected_lesson}\n\n"
-                "체크리스트 평가 결과:\n" +
-                "\n".join([f"{item}: {response}" for item, response in checklist_responses.items()]) +
-                "\n\n확정된 수업안에 대해 교사가 체크리스트로 평가한 결과입니다. 각 체크리스트는 1점부터 5점까지 이루어져 있으며, 1점은 가장 낮은 점수입니다. "
-                "교사가 실시한 평가 결과를 수업안과 비교하여 비판적으로 인공지능으로 검토해주세요. 교사가 준 점수가 옳지 않다고 여기면 점검해 주고 이유를 꼭 이야기해 주세요. 예를 들어 낮은 점수를 주었는데, 수업안에 반영되어 있는 항목이라면 어느 부분을 살펴본 후 교사가 부여한 점수를 수정하라고 말해주세요."
-            )
-            model = genai.GenerativeModel(model_name="gemini-1.5-flash",
-                                          generation_config={
-                                              "temperature": 0.7,
-                                              "max_output_tokens": 3000,
-                                          })
-            try:
-                response = model.generate_content([prompt])
-                ai_feedback = response.text
-            except Exception as e:
-                st.error(f"API 호출 실패: {e}")
-                ai_feedback = "생성 실패"
+            with st.spinner("AI 검토 중입니다. 잠시만 기다려주세요..."):
+                prompt = (
+                    f"수업안:\n{st.session_state.selected_lesson}\n\n"
+                    "체크리스트 평가 결과:\n" +
+                    "\n".join([f"{item}: {response}" for item, response in checklist_responses.items()]) +
+                    "\n\n확정된 수업안에 대해 교사가 체크리스트로 평가한 결과입니다. 각 체크리스트는 1점부터 5점까지 이루어져 있으며, 1점은 가장 낮은 점수입니다. "
+                    "교사가 실시한 평가 결과를 수업안과 비교하여 비판적으로 인공지능으로 검토해주세요. 교사가 준 점수가 옳지 않다고 여기면 점검해 주고 이유를 꼭 이야기해 주세요. 예를 들어 낮은 점수를 주었는데, 수업안에 반영되어 있는 항목이라면 어느 부분을 살펴본 후 교사가 부여한 점수를 수정하라고 말해주세요."
+                )
+                model = genai.GenerativeModel(
+                    model_name="gemini-1.5-flash",
+                    generation_config={
+                        "temperature": 0.7,
+                        "max_output_tokens": 3000,
+                    }
+                )
+                try:
+                    response = model.generate_content([prompt])
+                    ai_feedback = response.text
+                except Exception as e:
+                    st.error(f"API 호출 실패: {e}")
+                    ai_feedback = "생성 실패"
 
-            st.text_area("AI 검토 피드백", ai_feedback, height=300)
+                st.text_area("AI 검토 피드백", ai_feedback, height=300)
 
         if st.button("다시 시작하기", key="restart"):
             st.session_state.clear()

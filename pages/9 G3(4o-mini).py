@@ -3,10 +3,21 @@ import toml
 import pathlib
 from openai import OpenAI
 
-# secrets.toml 파일 경로
-secrets_path = pathlib.Path(__file__).parent.parent / ".streamlit/secrets.toml"
+# GitHub 아이콘 및 기타 UI 요소 숨기기
+hide_github_icon = """
+    <style>
+    .css-1jc7ptx, .e1ewe7hr3, .viewerBadge_container__1QSob,
+    .styles_viewerBadge__1yB5_, .viewerBadge_link__1S137,
+    .viewerBadge_text__1JaDK{ display: none; }
+    #MainMenu{ visibility: hidden; }
+    footer { visibility: hidden; }
+    header { visibility: hidden; }
+    </style>
+"""
+st.markdown(hide_github_icon, unsafe_allow_html=True)
 
-# secrets.toml 파일 읽기
+# secrets.toml 파일 경로 설정 및 파일 읽기
+secrets_path = pathlib.Path(__file__).parent.parent / ".streamlit/secrets.toml"
 with open(secrets_path, "r", encoding="utf-8") as f:
     secrets = toml.load(f)
 
@@ -61,8 +72,9 @@ with left_col:
 
     if st.session_state.step == 1:
         if "independent_variable_options" not in st.session_state:
-            prompt = f"연구 주제: {st.session_state.details[0]}\n독립변인에 대한 세 가지 선택지를 각각 1줄로 제공해주세요."
-            st.session_state.independent_variable_options = call_openai(prompt)
+            with st.spinner("옵션을 생성 중입니다..."):
+                prompt = f"연구 주제: {st.session_state.details[0]}\n독립변인에 대한 세 가지 선택지를 각각 1줄로 제공해주세요."
+                st.session_state.independent_variable_options = call_openai(prompt)
 
         option = st.radio("독립변인 선택지", st.session_state.independent_variable_options + ["직접 입력"], key="independent_variable")
         if option == "직접 입력":
@@ -74,8 +86,9 @@ with left_col:
 
     if st.session_state.step == 2:
         if "dependent_variable_options" not in st.session_state:
-            prompt = f"연구 주제: {st.session_state.details[0]}\n독립변인: {st.session_state.details[1]}\n종속변인에 대한 세 가지 선택지를 각각 1줄로 제공해주세요."
-            st.session_state.dependent_variable_options = call_openai(prompt)
+            with st.spinner("옵션을 생성 중입니다..."):
+                prompt = f"연구 주제: {st.session_state.details[0]}\n독립변인: {st.session_state.details[1]}\n종속변인에 대한 세 가지 선택지를 각각 1줄로 제공해주세요."
+                st.session_state.dependent_variable_options = call_openai(prompt)
 
         option = st.radio("종속변인 선택지", st.session_state.dependent_variable_options + ["직접 입력"], key="dependent_variable")
         if option == "직접 입력":
@@ -87,8 +100,9 @@ with left_col:
 
     if st.session_state.step == 3:
         if "research_subject_options" not in st.session_state:
-            prompt = f"연구 주제: {st.session_state.details[0]}\n독립변인: {st.session_state.details[1]}\n종속변인: {st.session_state.details[2]}\n연구대상에 대한 세 가지 선택지를 각각 1줄로 제공해주세요."
-            st.session_state.research_subject_options = call_openai(prompt)
+            with st.spinner("옵션을 생성 중입니다..."):
+                prompt = f"연구 주제: {st.session_state.details[0]}\n독립변인: {st.session_state.details[1]}\n종속변인: {st.session_state.details[2]}\n연구대상에 대한 세 가지 선택지를 각각 1줄로 제공해주세요."
+                st.session_state.research_subject_options = call_openai(prompt)
 
         option = st.radio("연구대상 선택지", st.session_state.research_subject_options + ["직접 입력"], key="research_subject")
         if option == "직접 입력":
@@ -100,8 +114,9 @@ with left_col:
 
     if st.session_state.step == 4:
         if "research_method_options" not in st.session_state:
-            prompt = f"연구 주제: {st.session_state.details[0]}\n독립변인: {st.session_state.details[1]}\n종속변인: {st.session_state.details[2]}\n연구대상: {st.session_state.details[3]}\n연구방법에 대한 세 가지 선택지를 각각 1줄로 제공해주세요."
-            st.session_state.research_method_options = call_openai(prompt)
+            with st.spinner("옵션을 생성 중입니다..."):
+                prompt = f"연구 주제: {st.session_state.details[0]}\n독립변인: {st.session_state.details[1]}\n종속변인: {st.session_state.details[2]}\n연구대상: {st.session_state.details[3]}\n연구방법에 대한 세 가지 선택지를 각각 1줄로 제공해주세요."
+                st.session_state.research_method_options = call_openai(prompt)
 
         option = st.radio("연구방법 선택지", st.session_state.research_method_options + ["직접 입력"], key="research_method")
         if option == "직접 입력":
@@ -113,8 +128,9 @@ with left_col:
 
     if st.session_state.step == 5:
         if "data_collection_method_options" not in st.session_state:
-            prompt = f"연구 주제: {st.session_state.details[0]}\n독립변인: {st.session_state.details[1]}\n종속변인: {st.session_state.details[2]}\n연구대상: {st.session_state.details[3]}\n연구방법: {st.session_state.details[4]}\n데이터 수집 방법에 대한 세 가지 선택지를 각각 1줄로 제공해주세요."
-            st.session_state.data_collection_method_options = call_openai(prompt)
+            with st.spinner("옵션을 생성 중입니다..."):
+                prompt = f"연구 주제: {st.session_state.details[0]}\n독립변인: {st.session_state.details[1]}\n종속변인: {st.session_state.details[2]}\n연구대상: {st.session_state.details[3]}\n연구방법: {st.session_state.details[4]}\n데이터 수집 방법에 대한 세 가지 선택지를 각각 1줄로 제공해주세요."
+                st.session_state.data_collection_method_options = call_openai(prompt)
 
         option = st.radio("데이터 수집 방법 선택지", st.session_state.data_collection_method_options + ["직접 입력"], key="data_collection_method")
         if option == "직접 입력":
@@ -132,27 +148,28 @@ with right_col:
 # 연구계획서 상세보기 생성 및 출력
 if st.session_state.step == 6:
     if st.button("연구계획서 상세보기", key="generate_plan"):
-        prompt = "다음 연구계획서의 상세보기를 작성해주세요. 연구 계획의 장점을 3가지 알려주세요. 연구 수행 전 연구자가 추가로 고려해야 할 점을 1가지 알려주세요.:\n\n" + "\n".join(st.session_state.details)
-        try:
-            completion = client.chat.completions.create(
-                model="gpt-4o",
-                messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
-                    {"role": "user", "content": prompt}
-                ],
-                max_tokens=3000,
-                temperature=0.7,
-                top_p=1,
-                frequency_penalty=0,
-                presence_penalty=0
-            )
-            research_plan = completion.choices[0].message.content
-        except Exception as e:
-            st.error(f"API 호출 실패: {e}")
-            research_plan = "생성 실패"
-        
-        st.text_area("연구계획서 상세보기", research_plan, height=300)
-        st.download_button("연구계획서 다운로드", data=research_plan, file_name="research_plan.txt", mime="text/plain")
+        with st.spinner("연구계획서를 생성 중입니다..."):
+            prompt = "다음 연구계획서의 상세보기를 작성해주세요. 연구 계획의 장점을 3가지 알려주세요. 연구 수행 전 연구자가 추가로 고려해야 할 점을 1가지 알려주세요.:\n\n" + "\n".join(st.session_state.details)
+            try:
+                completion = client.chat.completions.create(
+                    model="gpt-4o",
+                    messages=[
+                        {"role": "system", "content": "You are a helpful assistant."},
+                        {"role": "user", "content": prompt}
+                    ],
+                    max_tokens=3000,
+                    temperature=0.7,
+                    top_p=1,
+                    frequency_penalty=0,
+                    presence_penalty=0
+                )
+                research_plan = completion.choices[0].message.content
+            except Exception as e:
+                st.error(f"API 호출 실패: {e}")
+                research_plan = "생성 실패"
+            
+            st.text_area("연구계획서 상세보기", research_plan, height=300)
+            st.download_button("연구계획서 다운로드", data=research_plan, file_name="research_plan.txt", mime="text/plain")
 
 if st.button("다시 시작하기", key="restart"):
     st.session_state.step = 0
