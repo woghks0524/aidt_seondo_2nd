@@ -200,5 +200,5 @@ if st.session_state.step == 6:
             st.download_button("연구계획서 다운로드", data=research_plan, file_name="research_plan.txt", mime="text/plain")
 
 if st.button("다시 시작하기", key="restart"):
-    st.session_state.step = 0
-    st.session_state.details = []
+    st.session_state.clear()
+    st.experimental_rerun()
