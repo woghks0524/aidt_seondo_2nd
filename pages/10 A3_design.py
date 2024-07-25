@@ -246,8 +246,8 @@ elif st.session_state.step == 8:
     selected_standard = st.session_state.details[3].split(": ")[1]
     ai_concept = st.session_state.ai_details[4].split(": ")[1]  # AI가 설정한 개념
 
-    prompt = f"성취기준: {selected_standard}\n개념: {ai_concept}\n이 성취기준과 개념에 맞는 평가 루브릭 GRASP를 4가지 제공해주세요. 서술어 및 설명 금지."
-    ai_rubric = call_openai(prompt, max_tokens=300)
+    prompt = f"성취기준: {selected_standard}\n개념: {ai_concept}\n이 성취기준과 개념에 맞는 평가 루브릭 GRASP를 제공해주세요. 서술어 및 설명 금지."
+    ai_rubric = call_openai(prompt, max_tokens=500)
 
     rubric = st.text_area("평가 루브릭 GRASP를 입력하세요:", key="rubric")
     if st.button("입력하고 AI의견 참고하기", key="ai_rubric"):
